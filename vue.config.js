@@ -38,9 +38,8 @@ module.exports = {
     },
     // before: require('./mock/mock-server.js') // 禁用mock数据
     proxy: {
-      '/admin/acl/index': {
+      '/admin': {
         target: 'http://39.98.123.211',
-        changeOrigin: true,
       }
     }
   },
