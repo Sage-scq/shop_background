@@ -53,11 +53,11 @@
       :title="tmForm.id ? '修改品牌' : '添加品牌'"
       :visible.sync="dialogFormVisible"
     >
-      <el-form :model="tmForm" style="width: 80%">
-        <el-form-item label="品牌名称" label-width="100px">
+      <el-form :model="tmForm" style="width: 80%" :rules="rules" ref="tmForm">
+        <el-form-item label="品牌名称" label-width="100px" prop="tmName">
           <el-input v-model="tmForm.tmName" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="品牌LOGO" label-width="100px">
+        <el-form-item label="品牌LOGO" label-width="100px" prop="logoUrl">
           <el-upload
             class="avatar-uploader"
             action="/admin/product/fileUpload"
@@ -99,6 +99,21 @@ export default {
         logoUrl: "",
       },
       imageUrl: "",
+      rules: {
+        // 表单验证规则
+        tmName: [
+          { required: true, message: "请输入品牌名称", trigger: "blur" },
+          {
+            min: 2,
+            max: 10,
+            message: "长度在 2 到 10 个字符",
+            trigger: "change",
+          },
+        ],
+        logoUrl: [
+          { required: true, message: "请选择上传图片", trigger: "change" },
+        ],
+      },
     };
   },
   mounted() {
@@ -133,22 +148,34 @@ export default {
           });
         });
     },
-    async addOrUpdate() {
-      // 获取收集的参数
-      let trademark = this.tmForm;
-      // 整理收集的参数
-      // 该功能不需要整理数据
-      // 发送请求
-      // 成功/失败后
-      try {
-        const result = await this.$API.trademark.addOrUpdate(trademark);
-        this.$message.success(trademark.id ? "修改品牌成功" : "添加品牌成功");
-        // 返回列表页
-        this.dialogFormVisible = false;
-        this.getTrademarkList(trademark.id ? this.page : 1); // 添加成功返回第一页，修改成功返回当前页
-      } catch (error) {
-        this.$message.success(trademark.id ? "修改品牌失败" : "添加品牌失败");
-      }
+    addOrUpdate() {
+      // 对表单进行校验
+      this.$refs.tmForm.validate(async (valid) => {
+        if (valid) {
+          // 获取收集的参数
+          let trademark = this.tmForm;
+          // 整理收集的参数
+          // 该功能不需要整理数据
+          // 发送请求
+          // 成功/失败后
+          try {
+            const result = await this.$API.trademark.addOrUpdate(trademark);
+            this.$message.success(
+              trademark.id ? "修改品牌成功" : "添加品牌成功"
+            );
+            // 返回列表页
+            this.dialogFormVisible = false;
+            this.getTrademarkList(trademark.id ? this.page : 1); // 添加成功返回第一页，修改成功返回当前页
+          } catch (error) {
+            this.$message.success(
+              trademark.id ? "修改品牌失败" : "添加品牌失败"
+            );
+          }
+        } else {
+          console.log("校验失败");
+          return false;
+        }
+      });
     },
     showUpdateDialog(row) {
       this.dialogFormVisible = true;
