@@ -39,14 +39,21 @@
                   type="warning"
                   size="small"
                   @click="showUpdateDiv(row)"
+                  style="margin-right: 10px"
                 ></el-button>
               </el-tooltip>
-              <el-tooltip content="删除" placement="top">
-                <el-button
-                  icon="el-icon-delete"
-                  type="danger"
-                  size="small"
-                ></el-button>
+              <el-tooltip effect="dark" content="删除" placement="top">
+                <el-popconfirm
+                  :title="`确定删除${row.attrName}吗？`"
+                  @onConfirm="deleteAttr(row)"
+                >
+                  <el-button
+                    slot="reference"
+                    icon="el-icon-delete"
+                    size="small"
+                    type="danger"
+                  ></el-button>
+                </el-popconfirm>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -114,7 +121,12 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-button type="primary">保存</el-button>
+        <el-button
+          type="primary"
+          @click="save"
+          :disabled="attrForm.attrValueList.length === 0"
+          >保存</el-button
+        >
         <el-button @click="isShowList = true">取消</el-button>
       </div>
     </el-card>
@@ -141,6 +153,42 @@ export default {
     };
   },
   methods: {
+    // 删除attr回调
+    async deleteAttr(row) {
+      try {
+        await this.$API.attr.delete(row.id);
+        this.$message.success("删除成功");
+        this.getAttrList();
+      } catch (error) {
+        this.$message.error("删除失败");
+        console.log(error);
+      }
+    },
+    // 点击保存回调
+    async save() {
+      let attr = this.attrForm;
+      // 整理参数
+      attr.attrValueList = attr.attrValueList.filter((item) => {
+        if (item.valueName !== "") {
+          delete item.isEdit; // 过滤同时删掉isEdit
+          return true;
+        }
+      });
+      // 没有属性值不发请求
+      if (attr.attrValueList.length === 0) {
+        return;
+      }
+      try {
+        let result = await this.$API.attr.addOrUpdate(attr);
+        if (result.code === 200) {
+          this.$message.success("保存成功");
+          this.isShowList = true;
+          this.getAttrList();
+        }
+      } catch (error) {
+        this.$message.error("添加/修改属性失败");
+      }
+    },
     // 切换为编辑模式
     toEdit(row, index) {
       row.isEdit = true;
