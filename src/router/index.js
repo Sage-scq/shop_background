@@ -54,6 +54,10 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
+
+]
+// 异步路由，根据权限数据决定是否注册到路由器
+export const allAsyncRoutes = [
   // 商品管理路由
   {
     path: '/product',
@@ -76,19 +80,20 @@ export const constantRoutes = [
         path: 'spu/list',
         component: () => import('@/views/product/spu/List'),
         name: 'Spu',
-        meta: { title: 'spu管理' }
-      }, {
-        path: 'sku/list',
-        component: () => import('@/views/product/sku/List'),
-        name: 'Sku',
-        meta: { title: 'sku管理' }
+        meta: { title: 'SPU管理' }
       },
+      // {
+      //   path: 'sku/list',
+      //   component: () => import('@/views/product/sku/List'),
+      //   name: 'Sku',
+      //   meta: { title: 'sku管理' }
+      // },
     ]
   },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
 ]
+// 任意路由
+// 404 page must be placed at the end !!!
+export const anyRoute = { path: '*', redirect: '/404', hidden: true }
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

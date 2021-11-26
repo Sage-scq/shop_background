@@ -7,7 +7,11 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    roles: [],
+    buttons: [],
+    asyncRoutes: [],
+    routes: []
   }
 }
 
@@ -23,6 +27,11 @@ const mutations = {
   SET_USERINFO(state, userInfo) {
     state.name = userInfo.name;
     state.avatar = userInfo.avatar;
+    state.buttons = userInfo.buttons;
+    state.roles = userInfo.roles;
+  },
+  SET_ROUTES(state, routes) {
+
   }
 }
 
@@ -54,6 +63,9 @@ const actions = {
         // const { name, avatar } = data
 
         commit('SET_USERINFO', data)
+        // 处理路由字符串
+
+        commit('SET_ROUTES',)
         resolve(data)
       }).catch(error => {
         reject(error)
