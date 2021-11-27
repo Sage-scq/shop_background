@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -32,55 +32,58 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
+    path: "/login",
+    component: () => import("@/views/login/index"),
+    hidden: true,
   },
 
   {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
+    path: "/404",
+    component: () => import("@/views/404"),
+    hidden: true,
   },
 
   {
-    path: '/',
+    path: "/",
     component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
-    }]
+    redirect: "/dashboard",
+    children: [
+      {
+        path: "dashboard",
+        name: "Dashboard",
+        component: () => import("@/views/dashboard/index"),
+        meta: { title: "首页", icon: "dashboard" },
+      },
+    ],
   },
-
-]
+];
 // 异步路由，根据权限数据决定是否注册到路由器
 export const allAsyncRoutes = [
   // 商品管理路由
   {
-    path: '/product',
+    path: "/product",
     component: Layout,
-    name: 'Product',
-    meta: { title: '商品管理', icon: 'el-icon-s-shop' },
-    redirect: '/product/trademark/list',
+    name: "Product",
+    meta: { title: "商品管理", icon: "el-icon-s-shop" },
+    redirect: "/product/trademark/list",
     children: [
       {
-        path: 'trademark/list',
-        component: () => import('@/views/product/trademark/List'),
-        name: 'Trademark',
-        meta: { title: '品牌管理' }
-      }, {
-        path: 'attr/list',
-        component: () => import('@/views/product/attr/List'),
-        name: 'Attr',
-        meta: { title: '属性管理' }
-      }, {
-        path: 'spu/list',
-        component: () => import('@/views/product/spu/List'),
-        name: 'Spu',
-        meta: { title: 'SPU管理' }
+        path: "trademark/list",
+        component: () => import("@/views/product/trademark/List"),
+        name: "Trademark",
+        meta: { title: "品牌管理" },
+      },
+      {
+        path: "attr/list",
+        component: () => import("@/views/product/attr/List"),
+        name: "Attr",
+        meta: { title: "属性管理" },
+      },
+      {
+        path: "spu/list",
+        component: () => import("@/views/product/spu/List"),
+        name: "Spu",
+        meta: { title: "SPU管理" },
       },
       // {
       //   path: 'sku/list',
@@ -88,25 +91,26 @@ export const allAsyncRoutes = [
       //   name: 'Sku',
       //   meta: { title: 'sku管理' }
       // },
-    ]
+    ],
   },
-]
+];
 // 任意路由
 // 404 page must be placed at the end !!!
-export const anyRoute = { path: '*', redirect: '/404', hidden: true }
+export const anyRoute = { path: "*", redirect: "/404", hidden: true };
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes,
+  });
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
-export default router
+export default router;
